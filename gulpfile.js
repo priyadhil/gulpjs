@@ -1,4 +1,5 @@
 const gulp = require("gulp");
+//const { src, dest, parallel } = require("gulp");
 const imagemin = require("gulp-imagemin");
 const uglify = require("gulp-uglify");
 const sass = require("gulp-sass");
@@ -41,5 +42,10 @@ gulp.task("sass", () => {
   gulp
     .src("src/sass/*.scss")
     .pipe(sass().on("error", sass.logError))
-    .pipe(gulp.dest("dist/css"));
+    .pipe(gulp.dest("dist/css/"));
 });
+
+gulp.task(
+  "default",
+  gulp.series("message", "copysrc", "imageMin", "minify", "sass")
+);
