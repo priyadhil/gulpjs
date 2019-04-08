@@ -3,6 +3,7 @@ const gulp = require("gulp");
 const imagemin = require("gulp-imagemin");
 const uglify = require("gulp-uglify");
 const sass = require("gulp-sass");
+const concat = require("gulp-concat");
 
 /* Top Level Functions
 gulp.task - Define tasks
@@ -44,8 +45,21 @@ gulp.task("sass", () => {
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.dest("dist/css/"));
 });
-
+gulp.task("scripts", () => {
+  gulp
+    .src("src/js/*.js")
+    .pipe(concat("main.js"))
+    .pipe(uglify())
+    .pipe(gulp.dest("dist/js"));
+});
 gulp.task(
   "default",
-  gulp.series("message", "copysrc", "imageMin", "minify", "sass")
+  gulp.series("message", "copysrc", "imageMin", "sass", "scripts")
 );
+
+gulp.task("watch", () => {
+  gulp.watch("src/js/*.js", ["scripts"]);
+  gulp.watch("src/images/*.", ["imageMin"]);
+  gulp.watch("src/sass/*.scss", ["sass"]);
+  gulp.watch("src/*.html", ["copysrc"]);
+});
